@@ -98,7 +98,17 @@ def recommend_portfolio(intent_request):
         # for the first violation detected.
 
         ### YOUR DATA VALIDATION CODE STARTS HERE ###
-
+    slots = get_slots(intent_request)
+    validation_result = validate_data(age, investment_amount, intent_request)
+    if not validation_result['invalid']:
+        slots[validation_result["violatedSlot"]] = None
+        return elicit_slot(
+                intent_request["sessionAttributes"],
+                intent_request["currentIntent"]["name"],
+                slots,
+                validation_result["violatedSlot"],
+                validation_result["message"],
+        )
         ### YOUR DATA VALIDATION CODE ENDS HERE ###
 
         # Fetch current session attibutes
@@ -109,7 +119,17 @@ def recommend_portfolio(intent_request):
     # Get the initial investment recommendation
 
     ### YOUR FINAL INVESTMENT RECOMMENDATION CODE STARTS HERE ###
-
+    if risk_level =="None":
+        initial_recommendation = initial_recomend
+    elif risk_level =="Very Low":
+        initial_recommendation = "80% bonds (AGG), 20% equities (SPY)"
+    elif risk_level == "Low":
+        initial_recommendation = "60% bonds (AGG), 40% equities (SPY)"
+    elif risk_level == "Medium":
+        initial_recommendation = "40% bonds (AGG), 60% equities (SPY)"
+    elif risk_level == "High":
+        initial_recommendation = "20% bonds (AGG), 80% equities (SPY)"   
+    else: initial_recommendation = "0% bonds (AGG), 100% equities (SPY)"
     ### YOUR FINAL INVESTMENT RECOMMENDATION CODE ENDS HERE ###
 
     # Return a message with the initial recommendation based on the risk level.
